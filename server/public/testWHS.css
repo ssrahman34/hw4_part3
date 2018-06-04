@@ -1,0 +1,99 @@
+#p {
+   font-family: Open Sans;
+   font-size: xx-large;
+font-style: italic;
+  /* text-align: left;*/
+   margin: 10px;
+   color: #2E3C9C;
+/*float:left;*/
+  width: 40%;
+  padding: 10px;
+font-weight: 800;
+}
+body {
+	min-height: 100vh;  /* need this line to 
+					tell body to fill viewport */
+	font-family: 'Montserrat', sans-serif;
+	/*background-color: white;*/
+/*	display: flex;*/
+/*	flex-direction: column;*/
+	color: blue;
+	margin: 15px; 
+    }
+
+header {
+       text-align: center;
+       padding: 10px;
+	  
+}
+
+#hide{
+color:gray;
+
+}
+
+
+main {
+     flex: 1 0 auto;  /* the sticky footer trick without the footer */
+}
+
+
+input {
+	border-style: solid;
+	border-radius: 5px;
+	font-size: medium;
+}
+
+
+p {
+	font-size: medium;
+	margin: 10px;
+}
+
+#parent{
+	display-flex:column;
+}
+
+div.selectedControls {
+		     display: block;
+}
+
+div.normalControls {
+		   display: none;
+}
+
+/* Photo tile - position and size will be given by PhotoGallery */
+div.tile {
+    backgroundColor: #eee;
+    cursor: pointer;
+    overflow: hidden; 
+    float: left;
+    position: relative;
+}
+
+/* Tag styling */
+p.tagText {
+   left: 4px; 
+   top: 4px; 
+   position: absolute; 
+   zIndex: 2;
+   background-color: blue;
+   padding: 5px;
+   border-radius: 5px;
+   color: white;
+   word-break: break-all;
+}
+
+
+img {
+    width:100%;
+    display: block;
+}
+
+/* so far nothing special when image selected */
+img.normal {
+}
+
+img.selected {
+}
+

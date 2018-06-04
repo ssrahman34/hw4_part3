@@ -1,0 +1,12 @@
+{
+  "name": "react-photo-gallery-basic",
+  "version": "1.0.0",
+  "description": "example of react-photo-gallery using minimal options",
+  "keywords": [],
+  "main": "photoGallery.js",
+  "dependencies": {
+    "react": "16.3.2",
+    "react-dom": "16.3.2",
+    "react-photo-gallery": "6.0.24"
+  }
+}
