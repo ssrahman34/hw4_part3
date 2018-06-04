@@ -1,8 +1,9 @@
+http.globalAgent.maxSockets = 1;
 var url = require('url');
 var http = require('http');
 var sizeOf = require('image-size');
 const sqlite3 = require('sqlite3').verbose();
-let db = new sqlite3.Database('./PhotoQ2.db');
+let db = new sqlite3.Database('./PhotoQ.db');
 imgList=[];
 
 readJson();
@@ -23,10 +24,16 @@ function readJson(){
 	    console.log(imgList[0], imgList[1]);
 	}
 
+	
 	for (var i = 1; i < imgList.length; i++){
 	    console.log(imgList[i]);
 	    //var cmdStr="INSERT INTO photoTags VALUES(i, 'Dtring', 0,0,'','')"
-	    fillDB(imgList[i], i);
+	    imageUrl = "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/" + encodeURI(imgList[i]);
+	console.log("imageUrl:")
+	console.log(imageUrl);
+	console.log("imgList[i]:")
+	console.log(imgList[i])
+	fillDB(imageUrl, i);
 	}
 
 	function fillDB(imgUrl, i){
@@ -46,8 +53,9 @@ function readJson(){
 
 		    //console.log(width, height); 
 		    console.log("i"+ i);
-
-		    urlList = imgUrl.split('/');
+			console.log("imgUrl:");
+		    console.log(imgUrl);
+			urlList = imgUrl.split('/');
 		    console.log("Widht and h"+width, height);
 
 		    var fileName = urlList[urlList.length -1];
@@ -78,6 +86,6 @@ function dumpDB() {
 	console.log("in dump");
 	db.all( 'SELECT * FROM photoTags', dataCallback);
 		function dataCallback( err, data ) {
-		  	console.log(err);
 			console.log(data) 
+		  	console.log(err);
 		} } 
