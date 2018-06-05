@@ -1,44 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-/* "Hello world" server code */
 
-// like include
-//var http  = require('http');
-
-// like a callback
-// function handler (request, response) {
-//     var url = request.url;
-//     url = url.replace("/","");
-//     response.writeHead(200, {"Content-Type": "text/html"});
-//     response.write("<h1>Hello!</h1>");
-//     response.write("<p>You asked for <code>" + url + "</code></p>");
-//     response.end();
-// }
-
-// var server = http.createServer(handler);
-
-/* node-static code */
-
-// var static = require('node-static');
-// var root = './public';
-// var myPort = 55899;
-
-// var fileServer = new static.Server(root);
-
-// require('http').createServer(function (request, response) {
-//     request.addListener('end', function () {
-//         // fileServer.serve(request, response);
-// console.log("Listened!");
-// fileServer.serveFile('testWHS.html', 500, {}, request, response);
-//     }).resume();
-// }).listen(myPort);
-
-// Fill in YOUR port number!
-//server.listen(53974);
-
-/* Updated node-static code */
-
-// like include
 var http  = require("http");
 var staticServer = require("node-static");
 var fileServer = new staticServer.Server("./public");
@@ -68,21 +30,21 @@ function sendFiles (request, response) {
     else if (url.search("query") != -1) {
 	// Parse query
 	var query_arr = url.split("=");
-	var tag = query_arr[1];
+	var tags = query_arr[1]; //everything after num=
 
 	// Get all queries separated by plus sign
 	//var nums = query_arr[1];
-	console.log("Browser requested tag: " + tag);
+	console.log("Browser requested tag: " + tags);
 	
 	// Split queries into separate numbers on plus sign
-	// nums.replace(new RegExp("\\+","g"),' ')
-	//var num_list = nums.split(/[+]/gm);
+	tags.replace(new RegExp("\\+","g"),' ')
+	var num_list = tags.split(/[+]/gm);
 
 	// Test split num_list
-	/*console.log("Contents of split num_list:");
+	console.log("Contents of split num_list:");
 	for (i = 0; i < num_list.length; i++) {
 	    console.log(num_list[i]);
-	}*/
+	}
 
 	// Remove all invalid queries from num_list
 	/*console.log("Removing all invalid queries");
@@ -121,21 +83,21 @@ function sendFiles (request, response) {
 
 	    // Build query list
 	    //var ids = "(";
-	var ids = tag;
-	    /*console.log("Adding query numbers to sql cmd list");
+	var ids = num_list[0];
+		fcmd ="";
+	    console.log("Adding query numbers to sql cmd list");
 	    for (j = 0; j < num_list.length; j++) {
 		console.log(num_list[j]);
 		if (j == num_list.length - 1)
-		    ids = ids + num_list[j];
+			fcmd = fcmd + "(csvtags LIKE " + "'%" + decodeURIComponent(num_list[j]) + "%')";
 		else
-		    ids = ids + num_list[j] + ",";
+		    fcmd = fcmd + "(csvtags LIKE " + "'%" + decodeURIComponent(num_list[j]) + "%')"+ "AND ";
 	    }
-
-	    ids = ids + ")";*/
 	    
 	    //var cmd = "SELECT fileName, width, height FROM photoTags WHERE idNum=" + Number(num);
-	    var cmd = "SELECT fileName, width, height FROM photoTags WHERE csvtags LIKE "+ "'%" + decodeURIComponent(ids) + "%'";
-	    console.log("multiple query cmd: " + cmd);
+	    var cmd = "SELECT fileName, width, height FROM photoTags WHERE " + fcmd;
+	    //var cmd = "SELECT fileName, width, height FROM photoTags WHERE (csvtags LIKE "+ "'%" + decodeURIComponent(ids) + "%')"+ "AND (csvtags LIKE " +"'%" + decodeURIComponent(num_list[1]) + "%')";
+	    console.log("multiple query cmd: " + cmd + "fcmd" + fcmd);
 	    db.all(cmd, dbCallback);
 
 	    // Callback function to return error or get from db if no error

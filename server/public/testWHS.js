@@ -22,8 +22,8 @@ function sendRequest() {
     console.log("Entered sendRequest...");
     var num = document.getElementById("num").value;
     var input = document.getElementById("num").value;
-    //var numList = input.split(",");
-    //var num = numList[0];
+    var numList = input.split(",");
+    var num = numList[0];
     
     console.log("Requested " + input);
 
@@ -38,14 +38,14 @@ function sendRequest() {
 	// Build url
 	console.log("Building URL!");
 
-	var url = "query?num="+input;
-	/*for (i = 0; i < numList.length; i++) {
+	var url = "query?num=";
+	for (i = 0; i < numList.length; i++) {
 	    if (i == numList.length - 1)
 		url = url + numList[i];
 	    
 	    else url = url + numList[i] + "+";
-	}*/
-	
+	}
+	console.log("our urlsis " + url)
 	oReq.open("GET", url);
 	console.log("Opened oReq...");
 	
