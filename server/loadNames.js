@@ -1,4 +1,3 @@
-http.globalAgent.maxSockets = 1;
 var url = require('url');
 var http = require('http');
 var sizeOf = require('image-size');
@@ -28,12 +27,12 @@ function readJson(){
 	for (var i = 1; i < imgList.length; i++){
 	    console.log(imgList[i]);
 	    //var cmdStr="INSERT INTO photoTags VALUES(i, 'Dtring', 0,0,'','')"
-	    imageUrl = "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/" + encodeURI(imgList[i]);
-	console.log("imageUrl:")
-	console.log(imageUrl);
-	console.log("imgList[i]:")
-	console.log(imgList[i])
-	fillDB(imageUrl, i);
+	    //imageUrl = "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/" + encodeURI(imgList[i]);
+	//console.log("imageUrl:")
+	//console.log(imageUrl);
+	//console.log("imgList[i]:")
+	//console.log(imgList[i])
+	fillDB(imgList[i], i);
 	}
 
 	function fillDB(imgUrl, i){
@@ -52,9 +51,9 @@ function readJson(){
 		    height = dim.height; 
 
 		    //console.log(width, height); 
-		    console.log("i"+ i);
-			console.log("imgUrl:");
-		    console.log(imgUrl);
+		    //console.log("i"+ i);
+		//	console.log("imgUrl:");
+		  //  console.log(imgUrl);
 			urlList = imgUrl.split('/');
 		    console.log("Widht and h"+width, height);
 
