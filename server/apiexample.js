@@ -2,6 +2,7 @@
 const sqlite3 = require('sqlite3').verbose();
 var APIrequest = require('request');
 let db = new sqlite3.Database('./PhotoQ.db');
+
 //const pic = "Royal"
 // An object containing the data the CCV API wants
 // Will get stringified and put into the body of an HTTP request, below
@@ -21,6 +22,18 @@ APIrequestObject = {
 // You'll have to fill in the one you got from Google
 url = 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyDqlXnBXLZ3TB7LhsPJv7KJaokWZF9nxPY';
 
+fileNameURL = APIrequestObject.requests[0].image.source.imageUri;
+console.log("fileNameURL:");
+console.log(fileNameURL);
+
+fileNameArray = fileNameURL.split('/');
+
+fileName = fileNameArray[fileNameArray.length - 1];
+
+fileName = decodeURIComponent(fileName);
+
+console.log("FileName:")
+console.log(fileName)
 
 // function to send off request to the API
 function annotateImage() {
@@ -53,11 +66,19 @@ function annotateImage() {
 		//console.log(APIresponseJSON.labelAnnotations);
 		//console.log(APIresponseJSON.landmarkAnnotations);
 		//console.log(APIresponseJSON.labelAnnotations.length)
-		var max = APIresponseJSON.labelAnnotations.length < 6 ? APIresponseJSON.labelAnnotations.length : 6;
-		for(var i = 0; i < max; i++){
-			var cmd = "UPDATE photoTags SET csvtags='" +APIresponseJSON.labelAnnotations[i].description+"' WHERE CustomerID=1;"
-			console.log(APIresponseJSON.labelAnnotations[i].description)
-		}
+		        var max = APIresponseJSON.labelAnnotations.length < 6 ? APIresponseJSON.labelAnnotations.length : 6;
+                var tagList = []
+                for(var i = 0; i < max; i++){
+                    tagList.push(APIresponseJSON.labelAnnotations[i].description);
+			        console.log(APIresponseJSON.labelAnnotations[i].description);
+                }
+
+        var cmd = "UPDATE photoTags SET csvtags='"+tagList+"' WHERE fileName=\""+fileName+"\"";
+        db.run(cmd)
+
+
+
+                
 		//var cmd = "UPDATE photoTags SET csvtags='Alfred Schmidt', City='Frankfurt' WHERE CustomerID=1;"
 		//console.log(APIresponseJSON.landmarkAnnotations[0].locations);
 	    }		
