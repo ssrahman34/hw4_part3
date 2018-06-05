@@ -81,7 +81,9 @@ function sendRequest() {
 	var len = Object.keys(recordsObj).length;
 	var URL="http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/"
 	//This will be the object that has each photos fileName, width and height
-	photos=[];
+
+    /* Clear out photos from old query */
+    photos=[];
 	for (i = 0; i < len; i++) {
 	    var photoRow = new Object();
 	    var iStr = i.toString();
