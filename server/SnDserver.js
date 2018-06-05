@@ -34,7 +34,7 @@ const ReactDOM = require('react-dom');
 // }).listen(myPort);
 
 // Fill in YOUR port number!
-// server.listen(55899);
+//server.listen(53974);
 
 /* Updated node-static code */
 
@@ -134,7 +134,7 @@ function sendFiles (request, response) {
 	    ids = ids + ")";*/
 	    
 	    //var cmd = "SELECT fileName, width, height FROM photoTags WHERE idNum=" + Number(num);
-	    var cmd = "SELECT fileName, width, height FROM photoTags WHERE csvtags LIKE "+ "'%" + ids + "%'";
+	    var cmd = "SELECT fileName, width, height FROM photoTags WHERE csvtags LIKE "+ "'%" + decodeURIComponent(ids) + "%'";
 	    console.log("multiple query cmd: " + cmd);
 	    db.all(cmd, dbCallback);
 

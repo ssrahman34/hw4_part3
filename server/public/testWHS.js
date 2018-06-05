@@ -81,24 +81,25 @@ function sendRequest() {
 	var len = Object.keys(recordsObj).length;
 	var URL="http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/"
 	//This will be the object that has each photos fileName, width and height
-
+	console.log("len is long?" +len);
     /* Clear out photos from old query */
     photos=[];
-	for (i = 0; i < len; i++) {
+    var max = len < 12 ? len : 12; //either go from len if it is less than 12, if len is more than 12 go until 12
+	for (i = 0; i < max; i++) {
 	    var photoRow = new Object();
 	    var iStr = i.toString();
 	    photoRow.src = encodeURI(URL+recordsObj[iStr]["fileName"]);
 	    photoRow.width = recordsObj[iStr]["width"];
 	    photoRow.height = recordsObj[iStr]["height"];
 	    photos.push(photoRow);	    
-	    console.log(i + ": " + photoName); 
-	}
+		console.log("OUR VARIABLES: PHOTROW.SRC: " + photoRow.src +" photoRow.width: " + photoRow.width + " photoRow.height: "+ photoRow.height);
+		}
 	callReact();
 	function callReact(){
 		const reactContainer = document.getElementById("react");
-		//while(reactContainer.firstChild){
-		//	reactContainer.removeChild(reactContainer.firstChild);
-		//}
+		while(reactContainer.firstChild){
+			reactContainer.removeChild(reactContainer.firstChild);
+		}
 		var reactApp = ReactDOM.render(React.createElement(App),reactContainer);
 		window.dispatchEvent(new Event('resize'));
 	}//where we reder React DOM
@@ -272,6 +273,6 @@ function updateImages()
   xhr.send();
 }
 window.dispatchEvent(new Event('resize'));
-console.log("THEEEEE new version...");
+console.log("DAAA new version...");
 const reactContainer = document.getElementById("react");
 var reactApp = ReactDOM.render(React.createElement(App),reactContainer);
