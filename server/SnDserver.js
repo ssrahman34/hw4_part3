@@ -68,24 +68,24 @@ function sendFiles (request, response) {
     else if (url.search("query") != -1) {
 	// Parse query
 	var query_arr = url.split("=");
-	var num = query_arr[1];
+	var tag = query_arr[1];
 
 	// Get all queries separated by plus sign
-	var nums = query_arr[1];
-	console.log("Browser requested nums: " + nums);
+	//var nums = query_arr[1];
+	console.log("Browser requested tag: " + tag);
 	
 	// Split queries into separate numbers on plus sign
 	// nums.replace(new RegExp("\\+","g"),' ')
-	var num_list = nums.split(/[+]/gm);
+	//var num_list = nums.split(/[+]/gm);
 
 	// Test split num_list
-	console.log("Contents of split num_list:");
+	/*console.log("Contents of split num_list:");
 	for (i = 0; i < num_list.length; i++) {
 	    console.log(num_list[i]);
-	}
+	}*/
 
 	// Remove all invalid queries from num_list
-	console.log("Removing all invalid queries");
+	/*console.log("Removing all invalid queries");
 	for (i = 0; i < num_list.length; i++) {
 	    var num = num_list[i];
 	    if (Number(num) > 990 || Number(num) < 1 || isNaN(Number(num))) {
@@ -96,17 +96,17 @@ function sendFiles (request, response) {
 		console.log("Removing " + num_list[i]);
 		num_list.splice(i, 1); // Remove invalid element from num_list
 	    }    
-	}
+	}*/
 
-	console.log("After splicing: " + num_list + " length: " + num_list.length);
+//	console.log("After splicing: " + num_list + " length: " + num_list.length);
 
 	// If all queries have been found to be invalid
-	if (num_list.length == 0) {
+	/*if (num_list.length == 0) {
 	    console.log("All inputs invalid!");
 	    response.writeHead(404, {"Content-Type": "text/plain"});
 	    response.write("Response: All inputs invalid!");
 	    response.end();
-	}
+	}*/
 	
 	/* Responding to single-number queries */
 	// else {
@@ -117,13 +117,12 @@ function sendFiles (request, response) {
 	//     response.end();
 	// }
 
-	/* Responding to a list of number queries */
-	else {
+	//else {
 
 	    // Build query list
-	    var ids = "(";
-
-	    console.log("Adding query numbers to sql cmd list");
+	    //var ids = "(";
+	var ids = tag;
+	    /*console.log("Adding query numbers to sql cmd list");
 	    for (j = 0; j < num_list.length; j++) {
 		console.log(num_list[j]);
 		if (j == num_list.length - 1)
@@ -132,10 +131,10 @@ function sendFiles (request, response) {
 		    ids = ids + num_list[j] + ",";
 	    }
 
-	    ids = ids + ")";
+	    ids = ids + ")";*/
 	    
 	    //var cmd = "SELECT fileName, width, height FROM photoTags WHERE idNum=" + Number(num);
-	    var cmd = "SELECT fileName, width, height FROM photoTags WHERE idNum IN " + ids;
+	    var cmd = "SELECT fileName, width, height FROM photoTags WHERE csvtags LIKE "+ "'%" + ids + "%'";
 	    console.log("multiple query cmd: " + cmd);
 	    db.all(cmd, dbCallback);
 
@@ -158,28 +157,14 @@ function sendFiles (request, response) {
 			var index = k.toString();
 			requestedRecords[index] = rows[k];
 		    }
-
-		    // var row = rows[0];
-		    // console.log("db get successful. printing row...");
-		    // console.log(row);
-
-		    // var responseObj = new Object();
-		    // responseObj.fileName = row['fileName'];
-		    // responseObj.width = row['width'];
-		    // responseObj.height = row['height'];
-
 		    var jsonString = JSON.stringify(requestedRecords);
-		    
 		    response.writeHead(200, {"Content-Type": "application/json"});
 		    response.write(jsonString);
 		    response.end();
 		}
-		//response.writeHead(200, {"Content-Type": "text/plain"});
-		//response.write(data);
-		//response.end();
 	    }
 	    
-	}
+	//}
 	
     }
     

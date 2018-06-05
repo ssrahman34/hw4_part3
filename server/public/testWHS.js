@@ -22,29 +22,29 @@ function sendRequest() {
     console.log("Entered sendRequest...");
     var num = document.getElementById("num").value;
     var input = document.getElementById("num").value;
-    var numList = input.split(",");
-    var num = numList[0];
+    //var numList = input.split(",");
+    //var num = numList[0];
     
-    console.log("Requested " + num);
+    console.log("Requested " + input);
 
-    if (Number(num) > 990 || Number(num) < 1 || isNaN(Number(num))) {
-	console.log("Invalid input! Please try again.");
-    }
+   // if (Number(num) > 990 || Number(num) < 1 || isNaN(Number(num))) {
+	//console.log("Invalid input! Please try again.");
+   // }
 
-    else {
+    //else {
 	var oReq = new XMLHttpRequest();
 	//var url = "query?num=" + num;
 
 	// Build url
 	console.log("Building URL!");
 
-	var url = "query?num=";
-	for (i = 0; i < numList.length; i++) {
+	var url = "query?num="+input;
+	/*for (i = 0; i < numList.length; i++) {
 	    if (i == numList.length - 1)
 		url = url + numList[i];
 	    
 	    else url = url + numList[i] + "+";
-	}
+	}*/
 	
 	oReq.open("GET", url);
 	console.log("Opened oReq...");
@@ -55,7 +55,7 @@ function sendRequest() {
 	console.log("Added handleResponse listener...");
 	oReq.send();
 	console.log("Sent oReq...");
-    }
+    //}
 
     // Callback function to display photo (db version)
     function handleResponse2() {
@@ -81,6 +81,7 @@ function sendRequest() {
 	var len = Object.keys(recordsObj).length;
 	var URL="http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/"
 	//This will be the object that has each photos fileName, width and height
+	photos=[];
 	for (i = 0; i < len; i++) {
 	    var photoRow = new Object();
 	    var iStr = i.toString();
@@ -93,6 +94,9 @@ function sendRequest() {
 	callReact();
 	function callReact(){
 		const reactContainer = document.getElementById("react");
+		//while(reactContainer.firstChild){
+		//	reactContainer.removeChild(reactContainer.firstChild);
+		//}
 		var reactApp = ReactDOM.render(React.createElement(App),reactContainer);
 		window.dispatchEvent(new Event('resize'));
 	}//where we reder React DOM
@@ -222,7 +226,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { photos: photos };
+	this.state = { photos: photos };
     this.selectTile = this.selectTile.bind(this);
   }
 
