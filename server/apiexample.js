@@ -1,7 +1,7 @@
 // Node module for working with a request to an API or other fellow-server
 const sqlite3 = require('sqlite3').verbose();
 var APIrequest = require('request');
-var index = 0;
+var index = 700;
 let db = new sqlite3.Database('./PhotoQ.db');
 
 function loadImageList () {
@@ -24,7 +24,7 @@ imgList = loadImageList();
 // Will get stringified and put into the body of an HTTP request, below
 function annotateImage(id) {
 
-    if (id > 50){
+    if (id >= 988){
         return; //end at the 50
     }
 
