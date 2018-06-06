@@ -76,7 +76,7 @@ p {
 div.selectedControls{
  display: flex;
  align-items: center; 
- justify-content: center;
+ justify-content: space-between;
  left: 4px;
  top: 4px;
  position: absolute;
@@ -88,7 +88,7 @@ p.tagText {
  justify-content: center;
  align-items: center;
  font-size: x-large;
- margin: 5px;
+ margin: 10px;
  background-color: #77A0CC;
  padding: 5px;
  border-radius: 10px;
@@ -96,7 +96,7 @@ p.tagText {
  word-break: break-all;
 }
 div.normalControls {
-		   display: none;
+display: block;
 }
 
 /* Photo tile - position and size will be given by PhotoGallery */
@@ -109,17 +109,6 @@ div.tile {
 }
 
 /* Tag styling */
-p.tagText {
-   left: 4px; 
-   top: 4px; 
-   position: absolute; 
-   zIndex: 2;
-   background-color: blue;
-   padding: 5px;
-   border-radius: 5px;
-   color: white;
-   word-break: break-all;
-}
 
 
 img {
