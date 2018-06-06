@@ -15,6 +15,8 @@ photos=[];
 ];*/  
 console.log("In testWHS.js...");
 
+// Global tags array; will be used for React rendering
+tagsArray = [];
 
 window.dispatchEvent(new Event('resize'));
 // Function to send AJAX request to server
@@ -24,6 +26,25 @@ function sendRequest() {
     var input = document.getElementById("num").value;
     var numList = input.split(",");
     var num = numList[0];
+    tagsArray = numList; //We will use this for react only
+    const tagContainer = document.getElementById("tags");
+    if (tagsArray.length > 0){
+          var txt = document.createElement('p');
+          //newTag.className= "txti";
+          var txtnode = document.createTextNode("You searched for ");
+	  txt.style.fontStyle = "italic";
+	  txt.style.color = "Navy";
+          txt.appendChild(txtnode);
+          tagContainer.appendChild(txt);
+	}
+	for (var k = 0; k < tagsArray.length;k++){ 
+	  var newTag = document.createElement('div');
+	  newTag.className= "tagbtn";
+	  var tagText = document.createTextNode(tagsArray[k]);
+          newTag.appendChild(tagText);
+          tagContainer.appendChild(newTag);
+	}
+    //var reactApp = ReactDOM.render(React.createElement(App),tagContainer);
     
     console.log("Requested " + input);
 
@@ -73,7 +94,6 @@ function sendRequest() {
 
 	console.log("Filename: " + photoName);
 	console.log("Final url: " + photoURL);
-//	var display = document.getElementById("photoImg");
 //	display.src = photoURL;	
 
 	// Print all photo names requested
@@ -90,7 +110,8 @@ function sendRequest() {
 	    var iStr = i.toString();
 	    photoRow.src = encodeURI(URL+recordsObj[iStr]["fileName"]);
 	    photoRow.width = recordsObj[iStr]["width"];
-	    photoRow.height = recordsObj[iStr]["height"];
+	    photoRow.height = recordsObj[iStr]["height"];i
+	    photoRow.tags = tagsArray;
 	    photos.push(photoRow);	    
 		console.log("OUR VARIABLES: PHOTROW.SRC: " + photoRow.src +" photoRow.width: " + photoRow.width + " photoRow.height: "+ photoRow.height);
 		}
@@ -155,7 +176,11 @@ function sendRequest() {
 */
 
 class Tag extends React.Component {
-
+/*  constructor(props) {
+    super(props);
+        this.state = { tagsArray: tagsArray };
+    this.selectTile = this.selectTile.bind(this);
+  }*/
     render () {
 	return React.createElement('p',  // type
 	    { className: 'tagText'}, // properties
@@ -166,25 +191,44 @@ class Tag extends React.Component {
 
 // A react component for controls on an image tile
 class TileControl extends React.Component {
-
+	
     render () {
 	// remember input vars in closure
         var _selected = this.props.selected;
         var _src = this.props.src;
+	var _tags = this.props.tags;
         // parse image src for photo name
 	var photoName = _src.split("/").pop();
 	photoName = photoName.split('%20').join(' ');
+/*	let data = [
+  	{ value: "tagArray[0]", key: "1" },
+  	{ value: "tagArray[1]", key: "2" },
+  	{ value: "tagArray[2]", key: "3" }
+	]; */
 
-        return ( React.createElement('div', 
+  return ( React.createElement('div', 
+         {className: _selected ? 'selectedControls' : 'normalControls'},  
+          React.createElement(Tag,
+                        { text: _tags}),
+
+)
+    //<li key={item.key}>
+     // {item.value}
+    //</li>
+  )
+
+	/* Creating div with all overlay tags in it */
+   /*     return ( React.createElement('div', 
  	 {className: _selected ? 'selectedControls' : 'normalControls'},  
          // div contents - so far only one tag
-              React.createElement(Tag,
-		 { text: photoName })
-	    )// createElement div
+	  React.createElement(Tag,
+                        { text: photoName }))
+	//<ParentComponent addChild={this.onAddChild}>{tags}</ParentComponent>)
 	)// return
-    } // render
+  }//render
+*/
+}//render
 };
-
 
 // A react component for an image tile
 class ImageTile extends React.Component {
@@ -210,7 +254,8 @@ class ImageTile extends React.Component {
 		 // contents of div - the Controls and an Image
 		React.createElement(TileControl,
 		    {selected: _selected, 
-		     src: _photo.src}),
+		     src: _photo.src,
+			tags: _photo.tags}),
 		React.createElement('img',
 		    {className: _selected ? 'selected' : 'normal', 
                      src: _photo.src, 
@@ -248,7 +293,6 @@ class App extends React.Component {
       );
   }
 }
-
 /* Finally, we actually run some code */
 
 
@@ -273,6 +317,6 @@ function updateImages()
   xhr.send();
 }
 window.dispatchEvent(new Event('resize'));
-console.log("DAAA new version...");
+console.log("The new version...");
 const reactContainer = document.getElementById("react");
 var reactApp = ReactDOM.render(React.createElement(App),reactContainer);

@@ -10,6 +10,24 @@ font-style: italic;
   padding: 10px;
 font-weight: 800;
 }
+
+#tags{
+display:flex;
+flex-direction:row;
+}
+.tagbtn{
+    border: none;
+    border-radius: 10px;
+    background-color: gray;
+    color: white;
+    padding: 7px 7px 4px 7px;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left:10px;
+    margin-right:10px;
+}
+
 body {
 	min-height: 100vh;  /* need this line to 
 					tell body to fill viewport */
