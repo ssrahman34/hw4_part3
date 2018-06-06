@@ -176,11 +176,12 @@ function sendRequest() {
 */
 
 class Tag extends React.Component {
-/*  constructor(props) {
-    super(props);
-        this.state = { tagsArray: tagsArray };
-    this.selectTile = this.selectTile.bind(this);
-  }*/
+//constructor(props) {
+ //   super(props);
+//        this.state = { tagsArray: tagsArray };
+ //   this.selectTile = this.selectTile.bind(this);
+//var _tags = this.props.tags; 
+// }
     render () {
 	return React.createElement('p',  // type
 	    { className: 'tagText'}, // properties
@@ -191,7 +192,6 @@ class Tag extends React.Component {
 
 // A react component for controls on an image tile
 class TileControl extends React.Component {
-	
     render () {
 	// remember input vars in closure
         var _selected = this.props.selected;
@@ -200,32 +200,47 @@ class TileControl extends React.Component {
         // parse image src for photo name
 	var photoName = _src.split("/").pop();
 	photoName = photoName.split('%20').join(' ');
-/*	let data = [
-  	{ value: "tagArray[0]", key: "1" },
-  	{ value: "tagArray[1]", key: "2" },
-  	{ value: "tagArray[2]", key: "3" }
-	]; */
+	var allTags = [];
+	console.log(_tags);
+console.log(_tags[0]);
+	//atags =  _tags;
+	allTags.push('div');
+	allTags.push({className: _selected ? 'selectedControls' : 'normalControls'});
+console.log(allTags);
+	for(var i = 0; i < _tags.length; i++){
+		allTags.push(React.createElement(
+			Tag,{text: _tags[i]}));
+	}
+	return (React.createElement.apply(null,allTags))
+/*	const tagDisplay = data.map((tag) =>
+		React.createElement('div',
+         		{className: _selected ? 'selectedControls' : 'normalControls'},
+          		React.createElement(Tag,
+                        {text: tag} ))
+		); //map
+	return(tagDisplay)
+*/			
+	
+//const tagItems = data.map(function(tag){
+//    return <li>{tag}</li>});
 
-  return ( React.createElement('div', 
+/*return (React.createElement('div',
+         {className: _selected ? 'selectedControls' : 'normalControls'},
+          React.createElement(Tag,
+                        _tags,),
+	React.createElement(Tag, photoName))
+        )
+*/
+//return (<ul>{tagItems}<ul>)
+/*  return ( React.createElement('div', 
          {className: _selected ? 'selectedControls' : 'normalControls'},  
           React.createElement(Tag,
-                        { text: _tags}),
-
-)
-    //<li key={item.key}>
-     // {item.value}
-    //</li>
-  )
-
-	/* Creating div with all overlay tags in it */
-   /*     return ( React.createElement('div', 
- 	 {className: _selected ? 'selectedControls' : 'normalControls'},  
-         // div contents - so far only one tag
-	  React.createElement(Tag,
-                        { text: photoName }))
-	//<ParentComponent addChild={this.onAddChild}>{tags}</ParentComponent>)
-	)// return
-  }//render
+                        <ul>{tagItems }</ul>)
+*/
+/*React.createElement('div', 
+         {className: 'tag2'},
+          React.createElement(Tag,
+                        { text: photoName}))
 */
 }//render
 };
@@ -239,7 +254,7 @@ class ImageTile extends React.Component {
 	var _index = this.props.index;
 	var _photo = this.props.photo;
 	var _selected = _photo.selected; // this one is just for readability
-
+//	var _addTag = this.props.addNewTag
 	return (
 	    React.createElement('div', 
 	        {style: {margin: this.props.margin, width: _photo.width},
@@ -247,8 +262,17 @@ class ImageTile extends React.Component {
                          onClick: function onClick(e) {
 			    console.log("tile onclick");
 			    // call Gallery's onclick
+//		var P = React.createElement('div', {},
+  // 		React.createElement('input', {id: 'addTagBox'})
+   		//React.createElement('button',{onClick: addNewTag}, '+')
+//		)
+
+//ReactDOM.render(P,
+  //                document.getElementById("react"), // render target
+    //              () => {
+      //                console.log("We've just rendered this paragraph."); })
 			    return _onClick (e, 
-					     { index: _index, photo: _photo }) 
+					     { index: _index, photo: _photo}) 
 				}
 		 }, // end of props of div
 		 // contents of div - the Controls and an Image
@@ -261,8 +285,11 @@ class ImageTile extends React.Component {
                      src: _photo.src, 
 		     width: _photo.width, 
                      height: _photo.height
-			    })
-				)//createElement div
+			    }
+
+   
+				)//createElement img
+	)//create elem div
 	); // return
     } // render
 } // class
@@ -280,6 +307,10 @@ class App extends React.Component {
 
   selectTile(event, obj) {
     console.log("in onclick!", obj);
+    //React.createElement('div', {},
+    //    React.createElement('input', {id: 'addTagBox'+obj.index})
+    //    React.createElement('button',{onClick: addNewTag}, '+')
+    //)
     let photos = this.state.photos;
     photos[obj.index].selected = !photos[obj.index].selected;
     this.setState({ photos: photos });

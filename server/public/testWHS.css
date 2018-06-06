@@ -72,10 +72,29 @@ p {
 	display-flex:column;
 }
 
-div.selectedControls {
-		     display: block;
-}
 
+div.selectedControls{
+ display: flex;
+ align-items: center; 
+ justify-content: center;
+ left: 4px;
+ top: 4px;
+ position: absolute;
+ flex-wrap: wrap;
+ height: 100%;
+}
+p.tagText {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ font-size: x-large;
+ margin: 5px;
+ background-color: #77A0CC;
+ padding: 5px;
+ border-radius: 10px;
+ color: white;
+ word-break: break-all;
+}
 div.normalControls {
 		   display: none;
 }
