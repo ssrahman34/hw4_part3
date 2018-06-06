@@ -28,7 +28,11 @@ function sendRequest() {
     var num = numList[0];
     tagsArray = numList; //We will use this for react only
     const tagContainer = document.getElementById("tags");
-    if (tagsArray.length > 0){
+    
+   if (tagsArray.length > 0){
+	 while(tagContainer.firstChild){
+                        tagContainer.removeChild(tagContainer.firstChild);
+          }
           var txt = document.createElement('p');
           //newTag.className= "txti";
           var txtnode = document.createTextNode("You searched for ");
@@ -83,6 +87,10 @@ function sendRequest() {
 	console.log("Entered handleResponse2: " + oReq.responseText);
 
 	var requestedRecords = oReq.responseText;
+	console.log("requestedRecords" + requestedRecords);
+	if(Object.keys(requestedRecords).length === 0){
+		console.log("0");
+	}
 	var recordsObj = JSON.parse(requestedRecords); 
 	var zeroIndex = "0";
 	
@@ -184,7 +192,7 @@ class Tag extends React.Component {
 // }
     render () {
 	return React.createElement('p',  // type
-	    { className: 'tagText'}, // properties
+	    { className: 'tagText', onClick : function(){console.log("===============");} }, // properties
 	   this.props.text);  // contents
     }
 };
@@ -192,6 +200,15 @@ class Tag extends React.Component {
 
 // A react component for controls on an image tile
 class TileControl extends React.Component {
+	constructor(props) {
+    		super(props);
+    		this.sendDBRequest = this.sendDBRequest.bind(this);
+  	}
+
+	sendDBRequest(event, obj){
+		console.log("YAY"+event+obj)
+	}
+
     render () {
 	// remember input vars in closure
         var _selected = this.props.selected;
@@ -201,16 +218,13 @@ class TileControl extends React.Component {
 	var photoName = _src.split("/").pop();
 	photoName = photoName.split('%20').join(' ');
 	var allTags = [];
-	console.log(_tags);
-console.log(_tags[0]);
 	//atags =  _tags;
 	allTags.push('div');
 	allTags.push({className: _selected ? 'selectedControls' : 'normalControls'});
-console.log(allTags);
 	for(var i = 0; i < _tags.length; i++){
 		allTags.push(React.createElement(
 			Tag,{text: _tags[i]}));
-	}
+	}		    
 	return (React.createElement.apply(null,allTags))
 /*	const tagDisplay = data.map((tag) =>
 		React.createElement('div',

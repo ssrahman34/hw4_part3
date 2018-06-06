@@ -76,7 +76,7 @@ p {
 div.selectedControls{
  display: flex;
  align-items: center; 
- justify-content: space-between;
+ justify-content: center;
  left: 4px;
  top: 4px;
  position: absolute;
@@ -96,7 +96,7 @@ p.tagText {
  word-break: break-all;
 }
 div.normalControls {
-display: block;
+display: none;
 }
 
 /* Photo tile - position and size will be given by PhotoGallery */
