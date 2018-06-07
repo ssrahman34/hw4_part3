@@ -229,6 +229,7 @@ function sendFiles (request, response) {
 			tagList.push(tag);                        
                         console.log(tagList + "FINAL");
                         var newTags = '';
+			if (tagList.length <= 7){
                         for (var k = 0; k < tagList.length-1; k++) {
                                 newTags = newTags + tagList[k]+ ",";
                         }
@@ -238,9 +239,10 @@ function sendFiles (request, response) {
                         console.log("Update command" + cmd);
                         db.run(cmd,updateCallBack);
                         function updateCallBack(){
-                                console.log("WE HAVE DELETED FORM DB WITH UPDATE");
+                                console.log("WE HAVE added to DB WITH UPDATE");
                         }
-                        }
+                        }// if < 7 
+			}//else
                 }//addCB
 
 

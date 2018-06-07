@@ -186,7 +186,11 @@ addDBRequest(e){
         console.log("============= ADD TAG OBJ is " + e);
 	console.log("Photo: " + this.thisPhoto)   
         console.log("tag is " + e.target.value);
-        e.stopPropagation();
+	console.log("typeoftag is " + typeof(e.target.value)); 
+       e.stopPropagation();
+	if(e.target.value!= ""){
+console.log("TEST");
+	
         console.log("This is our tag" + e.target.value+ "and Image: " + this.thisPhoto);
         var oReq = new XMLHttpRequest();
 
@@ -205,7 +209,8 @@ addDBRequest(e){
         console.log("Added deleteFrontEnd listener...");
         oReq.send();
         console.log("Sent oReq..."); 
-       }//fn
+	}  
+     }//fn
 
 
 render () {
