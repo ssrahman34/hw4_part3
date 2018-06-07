@@ -19,7 +19,7 @@
 <div class="container" style = "display:flex;flex-direct:column;">
 	<div id = "p" style = "font-weight: 800;font-style:italic;">PHOTOQ</div>
 	<div style = "width: 50%;padding:20px;justify-content:space-around" id="query">
-		<input id="num" placeholder="photo number"> 
+		<input id="num" onkeyup = "autoComplete()" placeholder="photo number"> 
 		<button onclick="sendRequest()">&#x1F50D</button>
 	</div>
 </div>

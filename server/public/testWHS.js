@@ -12,6 +12,50 @@ tagsArray = [];
 
 window.dispatchEvent(new Event('resize'));
 
+keyCount = 0
+function autoComplete(){
+console.log("key down");
+keyCount = keyCount + 1;
+if(keyCount == 2){
+	console.log("2 keys")
+	keyCount = 0; //Do this here?
+	var chars = document.getElementById("num").value;
+	console.log(chars);
+	//console.log(tagsArray[chars]);
+	var oReq = new XMLHttpRequest();
+
+    	var url = "query?autocomplete="+chars;
+
+    	console.log("our autocompelte: " + chars)
+    	oReq.open("GET", url);
+    	console.log("Opened oReq...");	
+        oReq.addEventListener("load", displayTagsFrontEnd);
+
+    	console.log("Added handleResponse listener...");
+    	oReq.send();
+    function displayTagsFrontEnd(){
+        var requestedRecords = oReq.responseText;
+        console.log("requestedRecords" + requestedRecords);
+	var finalTags = []
+        if(Object.keys(requestedRecords).length === 0){
+                console.log("0");
+        }
+	else{
+		console.log("type of requested record", typeof(requestedRecords))
+		var tag_list = requestedRecords.split(",");//split by comma and put in list
+		console.log("length of tag_list", tag_list.length);
+		for(var i = 0 ; i < tag_list.length; i++){
+			if(finalTags.indexOf(tag_list[i])==-1 ){finalTags.push(tag_list[i])}
+		}
+		console.log("finalTags",finalTags);
+
+	}//else
+
+    }//displayTags
+}
+}
+
+
 // Function to send AJAX request to server
 function sendRequest() {
     console.log("Entered sendRequest...");
@@ -70,6 +114,7 @@ function sendRequest() {
     oReq.send();
     console.log("Sent oReq...");
     //}
+
 
     // Callback function to display photo (db version)
     function handleResponse2() {

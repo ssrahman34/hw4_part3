@@ -10,15 +10,40 @@ let db = new sqlite3.Database('./PhotoQ.db');
 
 const util = require('util')
 
+var auto = require("./makeTagTable");
+
+
+var tagTable = {};   // global
+auto.makeTagTable(tagTableCallback);
+function tagTableCallback(data) {
+   tagTable = data;
+}
+
+function sendTags(request,response){
+console.log("In senTags! ------------>");
+	var url = request.url;
+
+	if(url.search("query") != -1 && url.search("tag")==-1 && url.search("add")==-1 && url.search("autocomplete") != -1 ){
+		console.log("Detected autocompelte in request in sendTags. Writing respone to send back all the autocomplete tags!");
+		var query_arr = url.split("=");
+       		var chars = query_arr[1];
+		console.log(chars);
+        	response.writeHead(200, {"Content-Type": "text/html"});
+        	response.write("sarah rahman")
+        	response.end(); 
+        	console.log("end response")
+	}//if autocomplete
+}
 /* Initialize global array that will contain all photo names*/
 imgList = [];
 imgListLoaded = false;
 
 // like a callback
 function sendFiles (request, response) {
+
     var url = request.url;
     
-      if (url.search("html") !=-1 && url.split("/")[1].search("testWHS") == -1)
+      if (url.search("html") !=-1 && url.split("/")[1].search("testWHS") == -1 && url.split("/")[1].search("autocomplete") == -1)
 	{
 	response.writeHead(404, {"Content-Type": "text/html"});
 	response.write("<!DOCTYPE html><html><body><h1>404 Error</h1><p>Page not found.</p></body></html>");
@@ -27,8 +52,39 @@ function sendFiles (request, response) {
 	console.log(url);
     }
 
+      else if(url.search("query") != -1 && url.search("tag")==-1 && url.search("add")==-1 && url.search("autocomplete") != -1 ){
+                console.log("Detected autocompelte in request in sendTags. Writing respone to send back all the autocomplete tags!");
+                var query_arr = url.split("=");
+                var chars = query_arr[1];
+		var resp = ""
+                if(tagTable[chars] != null){
+			var theTags = tagTable[chars]['tags']
+			resp_list = Object.keys(theTags)
+			if(resp_list.length > 1){
+				for(var i = 0; i < resp_list.length; i++){
+					console.log("resp_list [i] in the loop is ",resp_list[i])
+					resp = resp + resp_list[i]
+				}
+				//console.log(typeof(resp))
+				//console.log("resp[0]", resp[0])
+				//console.log(typeof(resp[0]));
+			}//only get the unique values!
+			else{
+				resp = resp_list; // only one resp
+			}
+		}//we have tags!
+		else{
+			resp = ""
+		}//we don't have tags
+		console.log(resp, "Resp is");
+                response.writeHead(200, {"Content-Type": "text/html"});
+                response.write(resp)
+                response.end();
+                console.log("end response") 
+        }//if autocomplete
+
     // Handling client-side queries
-    else if (url.search("query") != -1 && url.search("tag")==-1 && url.search("add")==-1) {
+    else if (url.search("query") != -1 && url.search("tag")==-1 && url.search("add")==-1 && url.search("autocomplete") == -1) {
 	// Parse query
 	var query_arr = url.split("=");
 	var tags = query_arr[1]; //everything after num=
