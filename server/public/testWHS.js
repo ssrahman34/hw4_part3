@@ -4,21 +4,14 @@
    get the real image data using an AJAX query. */
 // Global; will be replaced by a call to the server! 
 photos=[];
-/*var photos = 
-[
-{src: "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/A%20Torre%20Manuelina.jpg", width: 574, height: 381 },
-{src: "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/Uluru%20sunset1141.jpg", width: 500 , height: 334 },
-{src: "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/Sejong tomb 1.jpg", width: 574, height: 430},
-{src: "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/Serra%20da%20Capivara%20-%20Painting%207.JPG", width: 574, height: 430},
-{src: "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/Royal%20Palace%2c%20Rabat.jpg", width: 574, height: 410},
-{src: "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/Red%20pencil%20urchin%20-%20Papahnaumokukea.jpg", width: 574 , height: 382 }
-];*/  
+
 console.log("In testWHS.js...");
 
 // Global tags array; will be used for React rendering
 tagsArray = [];
 
 window.dispatchEvent(new Event('resize'));
+
 // Function to send AJAX request to server
 function sendRequest() {
     console.log("Entered sendRequest...");
@@ -29,59 +22,54 @@ function sendRequest() {
     tagsArray = numList; //We will use this for react only
     const tagContainer = document.getElementById("tags");
     
-   if (tagsArray.length > 0){
-	 while(tagContainer.firstChild){
-                        tagContainer.removeChild(tagContainer.firstChild);
-          }
-          var txt = document.createElement('p');
-          //newTag.className= "txti";
-          var txtnode = document.createTextNode("You searched for ");
-	  txt.style.fontStyle = "italic";
-	  txt.style.color = "Navy";
-          txt.appendChild(txtnode);
-          tagContainer.appendChild(txt);
-	}
-	for (var k = 0; k < tagsArray.length;k++){ 
-	  var newTag = document.createElement('div');
-	  newTag.className= "tagbtn";
-	  var tagText = document.createTextNode(tagsArray[k]);
-          newTag.appendChild(tagText);
-          tagContainer.appendChild(newTag);
-	}
+    if (tagsArray.length > 0){
+	while(tagContainer.firstChild){
+            tagContainer.removeChild(tagContainer.firstChild);
+        }
+        var txt = document.createElement('p');
+        //newTag.className= "txti";
+        var txtnode = document.createTextNode("You searched for ");
+	txt.style.fontStyle = "italic";
+	txt.style.color = "Navy";
+        txt.appendChild(txtnode);
+        tagContainer.appendChild(txt);
+    }
+    for (var k = 0; k < tagsArray.length;k++){ 
+	var newTag = document.createElement('div');
+	newTag.className= "tagbtn";
+	var tagText = document.createTextNode(tagsArray[k]);
+        newTag.appendChild(tagText);
+        tagContainer.appendChild(newTag);
+    }
     //var reactApp = ReactDOM.render(React.createElement(App),tagContainer);
     
     console.log("Requested " + input);
 
-   // if (Number(num) > 990 || Number(num) < 1 || isNaN(Number(num))) {
-	//console.log("Invalid input! Please try again.");
-   // }
+    var oReq = new XMLHttpRequest();
 
-    //else {
-	var oReq = new XMLHttpRequest();
-	//var url = "query?num=" + num;
+    // Build url
+    console.log("Building URL!");
+    
+    var url = "query?num=";
 
-	// Build url
-	console.log("Building URL!");
-
-	var url = "query?num=";
-	for (i = 0; i < numList.length; i++) {
-	    if (i == numList.length - 1)
-		url = url + numList[i];
-	    
-	    else url = url + numList[i] + "+";
-	}
-	console.log("our urlsis " + url)
-	oReq.open("GET", url);
-	console.log("Opened oReq...");
+    for (i = 0; i < numList.length; i++) {
+	if (i == numList.length - 1)
+	    url = url + numList[i];
 	
-	// load --> when data is returned
-	oReq.addEventListener("load", handleResponse2);
-	// oReq.addEventListener("load", handleResponseMultiple);
-	console.log("Added handleResponse listener...");
-	oReq.send();
-	console.log("Sent oReq...");
-    //}
+	else url = url + numList[i] + "+";
+    }
+    console.log("our urlsis " + url)
+    oReq.open("GET", url);
+    console.log("Opened oReq...");
+    
+    // load --> when data is returned
+    oReq.addEventListener("load", handleResponse2);
 
+    // oReq.addEventListener("load", handleResponseMultiple);
+    console.log("Added handleResponse listener...");
+    oReq.send();
+    console.log("Sent oReq...");
+    //}
 
     // Callback function to display photo (db version)
     function handleResponse2() {
@@ -89,9 +77,11 @@ function sendRequest() {
 
 	var requestedRecords = oReq.responseText;
 	console.log("requestedRecords" + requestedRecords);
+
 	if(Object.keys(requestedRecords).length === 0){
 		console.log("0");
 	}
+
 	var recordsObj = JSON.parse(requestedRecords); 
 	var zeroIndex = "0";
 	
@@ -103,17 +93,20 @@ function sendRequest() {
 
 	console.log("Filename: " + photoName);
 	console.log("Final url: " + photoURL);
-//	display.src = photoURL;	
 
 	// Print all photo names requested
 	console.log("End of Part 4: Printing all fileNames of photos requested...");
+
 	var len = Object.keys(recordsObj).length;
 	var URL="http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/"
+
 	//This will be the object that has each photos fileName, width and height
 	console.log("len is long?" +len);
-    /* Clear out photos from old query */
-    photos=[];
-    var max = len < 12 ? len : 12; //either go from len if it is less than 12, if len is more than 12 go until 12
+
+	/* Clear out photos from old query */
+	photos=[];
+	var max = len < 12 ? len : 12; //either go from len if it is less than 12, if len is more than 12 go until 12
+
 	for (i = 0; i < max; i++) {
 	    var photoRow = new Object();
 	    var iStr = i.toString();
@@ -122,175 +115,140 @@ function sendRequest() {
 	    photoRow.height = recordsObj[iStr]["height"];
 	    csvTagsStr = recordsObj[iStr]["csvtags"];
 	    photoRow.tags = csvTagsStr.split(",");
+
 	    photos.push(photoRow);	    
-		console.log("OUR VARIABLES: PHOTROW.SRC: " + photoRow.src +" photoRow.width: " + photoRow.width + " photoRow.height: "+ photoRow.height);
-		}
-	callReact();
-	function callReact(){
-		const reactContainer = document.getElementById("react");
-		while(reactContainer.firstChild){
-			reactContainer.removeChild(reactContainer.firstChild);
-		}
-		var reactApp = ReactDOM.render(React.createElement(App),reactContainer);
-		window.dispatchEvent(new Event('resize'));
-	}//where we reder React DOM
-	for (var i = 0; i < photos.length; i++){
-		console.log(photos[i]);
+
+	    console.log("OUR VARIABLES: PHOTROW.SRC: " + photoRow.src +" photoRow.width: " + photoRow.width + " photoRow.height: "+ photoRow.height);
 	}
+	callReact();
 
-    }
-    
-    // Callback function to display name of photo corresponding to number requested by browser
-    // function handleResponse() {
-    // 	console.log("Entered handleResponse!");
-    // 	console.log("Entering handleResponse. This is the value of responseText: " + oReq.responseText);
+	function callReact(){
+	    const reactContainer = document.getElementById("react");
+	    while(reactContainer.firstChild){
+		reactContainer.removeChild(reactContainer.firstChild);
+	    }
+	    var reactApp = ReactDOM.render(React.createElement(App),reactContainer);
+	    window.dispatchEvent(new Event('resize'));
+	}//where we render React DOM
 
-    // 	if (oReq.status >= 400) {
-    // 	    console.log("The requested input is not valid! Please try again.");
-    // 	}
-
-    // 	var startOfURL = "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/";
-    // 	var photoName = oReq.responseText;
-    // 	var photoURL =  startOfURL + photoName;
-
-    // 	console.log("Final url: " + photoURL);
-    // 	var display = document.getElementById("photoImg");
-    // 	display.src = photoURL;
-    // }
+	for (var i = 0; i < photos.length; i++){
+	    console.log(photos[i]);
+	}
+    }    
 }
 
 
-
-// function sendRequest2() {
-//     // Parse numList by comma
-
-//     // For each num,
-//     // check if w/in bounds
-//     // based on # have server retrieve fileName, width, height from db
-//     // push each to dictList
-// }
-
-
-
-
 class addTag extends React.Component {
-constructor(props) {
-   super(props);
+    constructor(props) {
+	super(props);
 	this.thisPhoto = '';
 	this.thisTag = '';
 	this.addDBRequest = this.addDBRequest.bind(this);
- }
-
-addDBRequest(e){
+    }
+    
+    addDBRequest(e){
 	e.stopPropagation();
         console.log("============= ADD TAG OBJ is " + e);
 	console.log("Photo: " + this.thisPhoto)   
         console.log("tag is " + e.target.value);
 	console.log("typeoftag is " + typeof(e.target.value)); 
-       e.stopPropagation();
+	e.stopPropagation();
 	if(e.target.value!= ""){
-console.log("TEST");
+	    console.log("TEST");
 	
-        console.log("This is our tag" + e.target.value+ "and Image: " + this.thisPhoto);
-        var oReq = new XMLHttpRequest();
+            console.log("This is our tag" + e.target.value+ "and Image: " + this.thisPhoto);
+            var oReq = new XMLHttpRequest();
 
-        // Build url
-        console.log("Building URL!");
-
-        var url = "query?add=" + this.thisPhoto+ "+"+ e.target.value;
-
-        console.log("Our request url is " + url)
-        oReq.open("GET", url);
-        console.log("Opened oReq...");
-
-        // load --> when data is returned
-        oReq.addEventListener("load", function(){console.log("returned from deleteFrontEnd")});
-        // oReq.addEventListener("load", handleResponseMultiple);
-        console.log("Added deleteFrontEnd listener...");
-        oReq.send();
-        console.log("Sent oReq..."); 
+            // Build url
+            console.log("Building URL!");
+	    
+            var url = "query?add=" + this.thisPhoto+ "+"+ e.target.value;
+	    
+            console.log("Our request url is " + url)
+            oReq.open("GET", url);
+            console.log("Opened oReq...");
+	    
+            // load --> when data is returned
+            oReq.addEventListener("load", function(){console.log("returned from deleteFrontEnd")});
+            // oReq.addEventListener("load", handleResponseMultiple);
+            console.log("Added deleteFrontEnd listener...");
+            oReq.send();
+            console.log("Sent oReq..."); 
 	}  
-     }//fn
+    }//fn
 
 
-render () {
+    render () {
 	this.thisPhoto = this.props.photoName;
 	
         return React.createElement('input',  // type
-            //{className: 'addtagText',placeholder: 'Enter a tag' , onClick: this.addDBRequest(e),  disabled: true});  // contents
-    
-{className: 'addtagText',placeholder: 'Enter a tag' , onClick: this.addDBRequest});  // contents
-}
-};    
-
-/*render () {
-	this.thisPhoto = this.props.photoName;
-        return React.createElement('input',  // type
-            { onClick:addDBRequest, className: 'addtagText',placeholder: 'Enter a tag' , disabled: true});  // contents
+				   //{className: 'addtagText',placeholder: 'Enter a tag' , onClick: this.addDBRequest(e),  disabled: true});  // contents
+				   
+				   {className: 'addtagText',placeholder: 'Enter a tag' , onClick: this.addDBRequest});  // contents
     }
-} ;*/
+};    
 
 
 class Tag extends React.Component {
-constructor(props) {
-    super(props);
+    constructor(props) {
+	super(props);
 	this.thisTag = '';
 	this.thisPhoto = '';
 	this.sendDBRequest = this.sendDBRequest.bind(this);
-//        this.state = { tagsArray: tagsArray };
- //   this.selectTile = this.selectTile.bind(this); 
-}
+	//        this.state = { tagsArray: tagsArray };
+	//   this.selectTile = this.selectTile.bind(this); 
+    }
 
 
-  sendDBRequest(e){
+    sendDBRequest(e){
 	console.log("OBJ is " + e);
 	e.stopPropagation();
 	console.log("This is our tag" + this.thisTag+ "and Image: " + this.thisPhoto);
 	var oReq = new XMLHttpRequest();
-
+	
         // Build url
         console.log("Building URL!");
-
+	
         var url = "query?tag=" + this.thisPhoto+ "+"+ this.thisTag;
-
+	
         console.log("Our request url is " + url)
         oReq.open("GET", url);
         console.log("Opened oReq...");
-
+	
         // load --> when data is returned
         oReq.addEventListener("load", function(){console.log("returned from deleteFrontEnd")});
         // oReq.addEventListener("load", handleResponseMultiple);
         console.log("Added deleteFrontEnd listener...");
         oReq.send();
         console.log("Sent oReq...");
-}
+    }
     render () {
 	this.thisTag = this.props.text;
 	this.thisPhoto = this.props.photoName;
 	return React.createElement('p',  // type
-	    { className: 'tagText', onClick : this.sendDBRequest}, // properties
-	   this.props.text);  // contents
+				   { className: 'tagText', onClick : this.sendDBRequest}, // properties
+				   this.props.text);  // contents
     }
 };
 
 
 // A react component for controls on an image tile
 class TileControl extends React.Component {
-	constructor(props) {
-    		super(props);
-		//this.photoName = this.props.photo;
-    		this.sendDBRequest = this.sendDBRequest.bind(this);
-  	}
-
-	sendDBRequest(event, obj){
-		console.log("YAY"+event+obj)
-	}
-	addTagDB(){
+    constructor(props) {
+    	super(props);
+	//this.photoName = this.props.photo;
+    	this.sendDBRequest = this.sendDBRequest.bind(this);
+    }
+    
+    sendDBRequest(event, obj){
+	console.log("YAY"+event+obj)
+    }
+    addTagDB(){
 	console.log("WHERE WE SEND REQUEST");
 	
-
-	};
-
+	
+    };
+    
     render () {
 	// remember input vars in closure
         var _selected = this.props.selected;
@@ -301,51 +259,24 @@ class TileControl extends React.Component {
 	photoName = photoName.split('%20').join(' ');
 	var allTags = [];
 	//atags =  _tags;
+
 	allTags.push('div');
 	allTags.push({className: _selected ? 'selectedControls' : 'normalControls'});
 	allTags.push(React.createElement(
        	        addTag,{text: "add a Tag", photoName: photoName, inputValue : ''}));
 	for(var i = 0; i < _tags.length; i++){
-		allTags.push(React.createElement(
-			Tag,{text: _tags[i], photoName: photoName}));
+	    allTags.push(React.createElement(
+		Tag,{text: _tags[i], photoName: photoName}));
 	}		    
-	return (React.createElement.apply(null,allTags))
-/*	const tagDisplay = data.map((tag) =>
-		React.createElement('div',
-         		{className: _selected ? 'selectedControls' : 'normalControls'},
-          		React.createElement(Tag,
-                        {text: tag} ))
-		); //map
-	return(tagDisplay)
-*/			
-	
-//const tagItems = data.map(function(tag){
-//    return <li>{tag}</li>});
 
-/*return (React.createElement('div',
-         {className: _selected ? 'selectedControls' : 'normalControls'},
-          React.createElement(Tag,
-                        _tags,),
-	React.createElement(Tag, photoName))
-        )
-*/
-//return (<ul>{tagItems}<ul>)
-/*  return ( React.createElement('div', 
-         {className: _selected ? 'selectedControls' : 'normalControls'},  
-          React.createElement(Tag,
-                        <ul>{tagItems }</ul>)
-*/
-/*React.createElement('div', 
-         {className: 'tag2'},
-          React.createElement(Tag,
-                        { text: photoName}))
-*/
-}//render
+	return (React.createElement.apply(null,allTags))
+
+    }//render
 };
 
 // A react component for an image tile
 class ImageTile extends React.Component {
-
+    
     render() {
 	// onClick function needs to remember these as a closure
 	var _onClick = this.props.onClick;
@@ -355,39 +286,30 @@ class ImageTile extends React.Component {
 //	var _addTag = this.props.addNewTag
 	return (
 	    React.createElement('div', 
-	        {style: {margin: this.props.margin, width: _photo.width},
-			 className: 'tile',
-                         onClick: function onClick(e) {
-			    console.log("tile onclick");
-			    // call Gallery's onclick
-//		var P = React.createElement('div', {},
-  // 		React.createElement('input', {id: 'addTagBox'})
-   		//React.createElement('button',{onClick: addNewTag}, '+')
-//		)
+				{style: {margin: this.props.margin, width: _photo.width},
+				 className: 'tile',
+				 onClick: function onClick(e) {
+				     console.log("tile onclick");
 
-//ReactDOM.render(P,
-  //                document.getElementById("react"), // render target
-    //              () => {
-      //                console.log("We've just rendered this paragraph."); })
-			    return _onClick (e, 
-					     { index: _index, photo: _photo}) 
-				}
-		 }, // end of props of div
-		 // contents of div - the Controls and an Image
-		React.createElement(TileControl,
-		    {selected: _selected, 
-		     src: _photo.src,
-			tags: _photo.tags}),
-		React.createElement('img',
-		    {className: _selected ? 'selected' : 'normal', 
-                     src: _photo.src, 
-		     width: _photo.width, 
-                     height: _photo.height
-			    }
-
+				     return _onClick (e, 
+						      { index: _index, photo: _photo}) 
+				 }
+				}, // end of props of div
+				// contents of div - the Controls and an Image
+				React.createElement(TileControl,
+						    {selected: _selected, 
+						     src: _photo.src,
+						     tags: _photo.tags}),
+				React.createElement('img',
+						    {className: _selected ? 'selected' : 'normal', 
+						     src: _photo.src, 
+						     width: _photo.width, 
+						     height: _photo.height
+						    }
+						    
    
-				)//createElement img
-	)//create elem div
+						   )//createElement img
+			       )//create elem div
 	); // return
     } // render
 } // class
