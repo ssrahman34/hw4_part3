@@ -8,6 +8,8 @@ var fileServer = new staticServer.Server("./public");
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./PhotoQ.db');
 
+const util = require('util')
+
 /* Initialize global array that will contain all photo names*/
 imgList = [];
 imgListLoaded = false;
@@ -27,7 +29,7 @@ function sendFiles (request, response) {
     }
 
     // Handling client-side queries
-    else if (url.search("query") != -1) {
+    else if (url.search("query") != -1 && url.search("tag")==-1 && url.search("add")==-1) {
 	// Parse query
 	var query_arr = url.split("=");
 	var tags = query_arr[1]; //everything after num=
@@ -95,9 +97,10 @@ function sendFiles (request, response) {
 	    }
 	    
 	    //var cmd = "SELECT fileName, width, height FROM photoTags WHERE idNum=" + Number(num);
-	    var cmd = "SELECT fileName, width, height FROM photoTags WHERE " + fcmd;
+	    var cmd = "SELECT fileName, width, height, csvtags FROM photoTags WHERE " + fcmd;
 	    //var cmd = "SELECT fileName, width, height FROM photoTags WHERE (csvtags LIKE "+ "'%" + decodeURIComponent(ids) + "%')"+ "AND (csvtags LIKE " +"'%" + decodeURIComponent(num_list[1]) + "%')";
-	    console.log("multiple query cmd: " + cmd + "fcmd" + fcmd);
+	    console.log("WE WANNA DISPLAY PHOTOS AND TAGS: ----------- ");
+		console.log("multiple query cmd: " + cmd + "fcmd" + fcmd);
 	    db.all(cmd, dbCallback);
 
 	    // Callback function to return error or get from db if no error
@@ -129,7 +132,121 @@ function sendFiles (request, response) {
 	//}
 	
     }
-    
+        else if (url.search("query") != -1 && url.search("tag")!=-1){
+                console.log("handling tag from SnDServer")
+                var query_arr = url.split("=");
+                var photoAndTag = query_arr[1]; //everything after num=
+                photoAndTag.replace(new RegExp("\\+","g"),' ')
+                var photoTagList = photoAndTag.split(/[+]/gm);
+                console.log("Photo is " + photoTagList[0] + "TAG IS " + photoTagList[1]);
+                
+                var fileName = photoTagList[0];
+                var tag = photoTagList[1]
+                var cmd = "SELECT csvtags FROM photoTags WHERE (csvtags LIKE "+ "'%" + decodeURIComponent(tag) + "%')"+ "AND fileName='" + decodeURIComponent(fileName) +"'";
+		console.log(cmd);
+		db.all(cmd,deleteCallback);
+		function deleteCallback(err,rows){
+			if (err){console.log("Error: "+ err);}
+			else{
+
+                    	// Create object to contain all requested records
+                    	var requestedImage = new Object();
+			var index = "0";
+			requestedImage[index] = rows[0];	
+                    	//for (k = 0; k < rows.length; k++) {
+                        //	console.log(rows[k]);
+                        //	var index = k.toString();
+                        //requestedRecords[index] = rows[k];
+                    //}
+                    var jsonString = JSON.stringify(requestedImage);
+                    response.writeHead(200, {"Content-Type": "application/json"});
+                    response.write(jsonString);
+                    response.end();
+		    var allTags = util.inspect(rows);
+			console.log(allTags);
+                        console.log(typeof(allTags));
+			var csv = allTags.split("'");
+			var str = csv[1];
+			var tagList =str.split(",");
+			console.log(tagList);
+			var index = tagList.indexOf(tag);
+			console.log(index);
+			tagList.splice(index,1);
+			console.log(tagList + "FINAL");
+			var newTags = '';
+			for (var k = 0; k < tagList.length-1; k++) {
+				newTags = newTags + tagList[k]+ ",";
+			}
+			newTags= newTags + tagList[tagList.length-1];
+			console.log(newTags);
+			var cmd = "UPDATE photoTags set csvtags = '"+ newTags + "' WHERE fileName = '" + decodeURIComponent(fileName) + "'";
+			console.log("Update command" + cmd);
+			db.run(cmd,updateCallBack);
+			function updateCallBack(){
+				console.log("WE HAVE DELETED FORM DB WITH UPDATE");
+			}
+			}
+		}//delete
+	}
+	else if (url.search("query") != -1 && url.search("add")!=-1){
+		console.log("MADE IT TO ADD TAG");
+                var query_arr = url.split("=");
+                var photoAndTag = query_arr[1]; //everything after num=
+                photoAndTag.replace(new RegExp("\\+","g"),' ')
+                var photoTagList = photoAndTag.split(/[+]/gm);
+                console.log("Photo is " + photoTagList[0] + "TAG IS " + photoTagList[1]);
+
+                var fileName = photoTagList[0];
+                var tag = photoTagList[1]
+                var cmd = "SELECT csvtags FROM photoTags WHERE fileName='" + decodeURIComponent(fileName) +"'";
+		console.log(cmd);
+                db.all(cmd,addCallback);
+                
+		function addCallback(err,rows){
+                        if (err){console.log("Error: "+ err);}
+                        else{
+
+                        // Create object to contain all requested records
+                        var requestedImage = new Object();
+                        var index = "0";
+                        requestedImage[index] = rows[0];
+                        //for (k = 0; k < rows.length; k++) {
+                        //      console.log(rows[k]);
+                        //      var index = k.toString();
+                        //requestedRecords[index] = rows[k];
+                    //}
+                    var jsonString = JSON.stringify(requestedImage);
+                    response.writeHead(200, {"Content-Type": "application/json"});
+                    response.write(jsonString);
+                    response.end();
+                    var allTags = util.inspect(rows);
+                        console.log(allTags);
+                        console.log(typeof(allTags));
+                        var csv = allTags.split("'");
+                        var str = csv[1];
+                        var tagList =str.split(",");
+                        console.log(tagList);
+			tagList.push(tag);                        
+                        console.log(tagList + "FINAL");
+                        var newTags = '';
+                        for (var k = 0; k < tagList.length-1; k++) {
+                                newTags = newTags + tagList[k]+ ",";
+                        }
+                        newTags= newTags + tagList[tagList.length-1];
+                        console.log(newTags);
+                        var cmd = "UPDATE photoTags set csvtags = '"+ newTags + "' WHERE fileName = '" + decodeURIComponent(fileName) + "'";
+                        console.log("Update command" + cmd);
+                        db.run(cmd,updateCallBack);
+                        function updateCallBack(){
+                                console.log("WE HAVE DELETED FORM DB WITH UPDATE");
+                        }
+                        }
+                }//addCB
+
+
+
+
+	}    
     else {
 	request.addListener('end', findFile).resume();
     }

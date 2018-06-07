@@ -95,6 +95,18 @@ p.tagText {
  color: white;
  word-break: break-all;
 }
+p.addtagText {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ font-size: x-large;
+ margin: 10px;
+ background-color: #77A0CC;
+ padding: 5px;
+ border-radius: 10px;
+ color: white;
+ word-break: break-all;
+}
 div.normalControls {
 display: none;
 }

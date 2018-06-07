@@ -82,6 +82,7 @@ function sendRequest() {
 	console.log("Sent oReq...");
     //}
 
+
     // Callback function to display photo (db version)
     function handleResponse2() {
 	console.log("Entered handleResponse2: " + oReq.responseText);
@@ -118,8 +119,9 @@ function sendRequest() {
 	    var iStr = i.toString();
 	    photoRow.src = encodeURI(URL+recordsObj[iStr]["fileName"]);
 	    photoRow.width = recordsObj[iStr]["width"];
-	    photoRow.height = recordsObj[iStr]["height"];i
-	    photoRow.tags = tagsArray;
+	    photoRow.height = recordsObj[iStr]["height"];
+	    csvTagsStr = recordsObj[iStr]["csvtags"];
+	    photoRow.tags = csvTagsStr.split(",");
 	    photos.push(photoRow);	    
 		console.log("OUR VARIABLES: PHOTROW.SRC: " + photoRow.src +" photoRow.width: " + photoRow.width + " photoRow.height: "+ photoRow.height);
 		}
@@ -169,30 +171,99 @@ function sendRequest() {
 // }
 
 
-// Called when the user pushes the "submit" button 
-/*function photoByNumber() {
-    //sendRequest();
-    var num = document.getElementById("num").value;
-    num = num.trim();
-    var photoNum = Number(num);
-    if (photoNum != NaN) {
-	var photoURL = photoURLArray[photoNum].url;
-	var display = document.getElementById("photoImg");
-	display.src = photoURL;
-    }
+
+
+class addTag extends React.Component {
+constructor(props) {
+   super(props);
+	this.thisPhoto = '';
+	this.thisTag = '';
+	this.addDBRequest = this.addDBRequest.bind(this);
+ }
+
+addDBRequest(e){
+	e.stopPropagation();
+        console.log("============= ADD TAG OBJ is " + e);
+	console.log("Photo: " + this.thisPhoto)   
+        console.log("tag is " + e.target.value);
+        e.stopPropagation();
+        console.log("This is our tag" + e.target.value+ "and Image: " + this.thisPhoto);
+        var oReq = new XMLHttpRequest();
+
+        // Build url
+        console.log("Building URL!");
+
+        var url = "query?add=" + this.thisPhoto+ "+"+ e.target.value;
+
+        console.log("Our request url is " + url)
+        oReq.open("GET", url);
+        console.log("Opened oReq...");
+
+        // load --> when data is returned
+        oReq.addEventListener("load", function(){console.log("returned from deleteFrontEnd")});
+        // oReq.addEventListener("load", handleResponseMultiple);
+        console.log("Added deleteFrontEnd listener...");
+        oReq.send();
+        console.log("Sent oReq..."); 
+       }//fn
+
+
+render () {
+	this.thisPhoto = this.props.photoName;
+	
+        return React.createElement('input',  // type
+            //{className: 'addtagText',placeholder: 'Enter a tag' , onClick: this.addDBRequest(e),  disabled: true});  // contents
+    
+{className: 'addtagText',placeholder: 'Enter a tag' , onClick: this.addDBRequest});  // contents
 }
-*/
+};    
+
+/*render () {
+	this.thisPhoto = this.props.photoName;
+        return React.createElement('input',  // type
+            { onClick:addDBRequest, className: 'addtagText',placeholder: 'Enter a tag' , disabled: true});  // contents
+    }
+} ;*/
+
 
 class Tag extends React.Component {
-//constructor(props) {
- //   super(props);
+constructor(props) {
+    super(props);
+	this.thisTag = '';
+	this.thisPhoto = '';
+	this.sendDBRequest = this.sendDBRequest.bind(this);
 //        this.state = { tagsArray: tagsArray };
- //   this.selectTile = this.selectTile.bind(this);
-//var _tags = this.props.tags; 
-// }
+ //   this.selectTile = this.selectTile.bind(this); 
+}
+
+
+  sendDBRequest(e){
+	console.log("OBJ is " + e);
+	e.stopPropagation();
+	console.log("This is our tag" + this.thisTag+ "and Image: " + this.thisPhoto);
+	var oReq = new XMLHttpRequest();
+
+        // Build url
+        console.log("Building URL!");
+
+        var url = "query?tag=" + this.thisPhoto+ "+"+ this.thisTag;
+
+        console.log("Our request url is " + url)
+        oReq.open("GET", url);
+        console.log("Opened oReq...");
+
+        // load --> when data is returned
+        oReq.addEventListener("load", function(){console.log("returned from deleteFrontEnd")});
+        // oReq.addEventListener("load", handleResponseMultiple);
+        console.log("Added deleteFrontEnd listener...");
+        oReq.send();
+        console.log("Sent oReq...");
+}
     render () {
+	this.thisTag = this.props.text;
+	this.thisPhoto = this.props.photoName;
 	return React.createElement('p',  // type
-	    { className: 'tagText', onClick : function(){console.log("===============");} }, // properties
+	    { className: 'tagText', onClick : this.sendDBRequest}, // properties
 	   this.props.text);  // contents
     }
 };
@@ -202,12 +273,18 @@ class Tag extends React.Component {
 class TileControl extends React.Component {
 	constructor(props) {
     		super(props);
+		//this.photoName = this.props.photo;
     		this.sendDBRequest = this.sendDBRequest.bind(this);
   	}
 
 	sendDBRequest(event, obj){
 		console.log("YAY"+event+obj)
 	}
+	addTagDB(){
+	console.log("WHERE WE SEND REQUEST");
+	
+
+	};
 
     render () {
 	// remember input vars in closure
@@ -221,9 +298,11 @@ class TileControl extends React.Component {
 	//atags =  _tags;
 	allTags.push('div');
 	allTags.push({className: _selected ? 'selectedControls' : 'normalControls'});
+	allTags.push(React.createElement(
+       	        addTag,{text: "add a Tag", photoName: photoName, inputValue : ''}));
 	for(var i = 0; i < _tags.length; i++){
 		allTags.push(React.createElement(
-			Tag,{text: _tags[i]}));
+			Tag,{text: _tags[i], photoName: photoName}));
 	}		    
 	return (React.createElement.apply(null,allTags))
 /*	const tagDisplay = data.map((tag) =>
