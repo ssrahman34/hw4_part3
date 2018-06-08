@@ -61,13 +61,14 @@ function sendFiles (request, response) {
 			var theTags = tagTable[chars]['tags']
 			resp_list = Object.keys(theTags)
 			if(resp_list.length > 1){
-				for(var i = 0; i < resp_list.length; i++){
+				for(var i = 0; i < resp_list.length-1; i++){
 					console.log("resp_list [i] in the loop is ",resp_list[i])
-					resp = resp + resp_list[i]
+					resp = resp + resp_list[i] + "," //add a comma
 				}
-				//console.log(typeof(resp))
-				//console.log("resp[0]", resp[0])
-				//console.log(typeof(resp[0]));
+				resp = resp + resp_list[i]//resp
+				console.log(typeof(resp))
+				console.log("resp[0]", resp[0])
+				console.log(typeof(resp[0]));
 			}//only get the unique values!
 			else{
 				resp = resp_list[0]; // only one resp
