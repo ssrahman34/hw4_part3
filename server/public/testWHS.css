@@ -1,3 +1,20 @@
+.popuptext {
+   /*flex-direction: */
+   visibility: hidden; 
+    width: 160px;
+    background-color: white;
+    border: 1px solid black;
+    /*text-align: center;*/
+    border-radius: 6px;
+    padding: 20px;
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    margin-left: -50px;
+    margin-top:30px;
+}
+
+
 #p {
    font-family: Open Sans;
    font-size: xx-large;
@@ -17,15 +34,14 @@ flex-direction:row;
 }
 .tagbtn{
     border: none;
-    border-radius: 10px;
-    background-color: gray;
+    border-radius: 2px;
+    background-color: #85c1b5;
     color: white;
-    padding: 7px 7px 1px 7px;
-    font-size: 16px;
+    padding: 7px 7px 5px 7px;
+    font-size: 15px;
     cursor: pointer;
     display: inline-block;
-    margin-left:10px;
-    margin-right:10px;
+    margin :3px;
 }
 
 body {

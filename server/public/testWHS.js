@@ -12,12 +12,15 @@ tagsArray = [];
 
 window.dispatchEvent(new Event('resize'));
 
+autoArray = [] //array that holds elements for autocomplete
 keyCount = 0
 function autoComplete(){
 console.log("key down");
 keyCount = keyCount + 1;
 if(keyCount == 2){
-	console.log("2 keys")
+	const popContainer = document.getElementById("myPopup");
+	popContainer.style.visibility= "visible"; //get rid of visibility
+	console.log("visibility: hidden;")
 	keyCount = 0; //Do this here?
 	var chars = document.getElementById("num").value;
 	console.log(chars);
@@ -48,12 +51,35 @@ if(keyCount == 2){
 			if(finalTags.indexOf(tag_list[i])==-1 ){finalTags.push(tag_list[i])}
 		}
 		console.log("finalTags",finalTags);
+		//"myPopup"
+		const popContainer = document.getElementById("myPopup");
+		if (autoArray.length > 0 ){
+			while(popContainer.firstChild){
+                        popContainer.removeChild(popContainer.firstChild);
+                }
 
-	}//else
+		}//we have had previos auto completion tags 
+		autoArray = autoArray + finalTags;
+	//	while(popContainer.firstChild){
+          //  		popContainer.removeChild(popContainer.firstChild);
+       // 	}
+    	/*	if (popContainer.length > 0){
+        		while(tagContainer.firstChild){
+            		popContainer.removeChild(tagContainer.firstChild);
+        	}*/
 
-    }//displayTags
-}
-}
+	    	for (var k = 0; k < finalTags.length;k++){
+            		var newTag = document.createElement('div');
+        		newTag.className= "tagbtn";
+        		var tagText = document.createTextNode(finalTags[k]);
+        		newTag.appendChild(tagText);
+        		popContainer.appendChild(newTag);
+    		}//for
+
+    	}
+    }//displayTagsFront end
+	}//if keycoutn==2
+}//fn
 
 
 // Function to send AJAX request to server

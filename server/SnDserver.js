@@ -70,7 +70,7 @@ function sendFiles (request, response) {
 				//console.log(typeof(resp[0]));
 			}//only get the unique values!
 			else{
-				resp = resp_list; // only one resp
+				resp = resp_list[0]; // only one resp
 			}
 		}//we have tags!
 		else{
