@@ -17,6 +17,21 @@ keyCount = 0
 function autoComplete(){
 console.log("key down");
 keyCount = keyCount + 1;
+if(keyCount == 0){
+      const popContainer = document.getElementById("myPopup");
+        popContainer.style.visibility= "hidden"; //get rid of visibility
+        console.log("visibility: hidden;")
+
+	if (autoArray.length > 0 ){
+              while(popContainer.firstChild){
+                   popContainer.removeChild(popContainer.firstChild);
+         	}
+	}//if
+	autoArray = []//reassign to 0
+
+}
+
+
 if(keyCount == 2){
 	const popContainer = document.getElementById("myPopup");
 	popContainer.style.visibility= "visible"; //get rid of visibility
@@ -42,7 +57,18 @@ if(keyCount == 2){
 	var finalTags = []
         if(Object.keys(requestedRecords).length === 0){
                 console.log("0");
-        }
+      const popContainer = document.getElementById("myPopup");
+        popContainer.style.visibility= "hidden"; //get rid of visibility
+        console.log("visibility: hidden;")
+         
+        if (autoArray.length > 0 ){
+              while(popContainer.firstChild){
+                   popContainer.removeChild(popContainer.firstChild);
+                }
+        }//if
+        autoArray = []//reassign to 0
+
+        }//if
 	else{
 		console.log("type of requested record", typeof(requestedRecords))
 		var tag_list = requestedRecords.split(",");//split by comma and put in list
@@ -84,6 +110,17 @@ if(keyCount == 2){
 
 // Function to send AJAX request to server
 function sendRequest() {
+
+      const popContainer = document.getElementById("myPopup");
+        popContainer.style.visibility= "hidden"; //get rid of visibility
+        console.log("visibility: hidden;")
+                if (autoArray.length > 0 ){
+                        while(popContainer.firstChild){
+                        popContainer.removeChild(popContainer.firstChild);
+                }
+		}
+	autoArray = [] //empty autoArray
+
     console.log("Entered sendRequest...");
     var num = document.getElementById("num").value;
     var input = document.getElementById("num").value;
